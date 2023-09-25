@@ -33,5 +33,5 @@ function draw() {
 }
 
 function update() {
-  acceleration.limit(2);
+  acceleration.limit(50);
 }
