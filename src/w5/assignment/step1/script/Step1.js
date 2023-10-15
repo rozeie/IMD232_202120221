@@ -1,16 +1,12 @@
 const cNum = 8;
 const rNum = 8;
-let gridC;
-let gridR;
+const margin = 20;
+const spacing = 20; // 각 그래픽 간의 간격
 let angleBegin = 0;
-let angleBeginVel;
-let angleStep;
+let angleStep = 15;
 
 function setup() {
   setCanvasContainer('mySketchGoesHere', 1, 1, true);
-  gridC = height * 0.4;
-  angleBegin = 0;
-  angleBeginVel = (TAU / 360) * 0.5;
   colorMode(HSL, 360, 100, 100, 100);
   background(360, 0, 100);
 }
@@ -18,23 +14,23 @@ function setup() {
 function draw() {
   background(360, 0, 100);
 
-  const x = rad * cos(angle);
-  const y = rad * sin(angle);
-
   for (let r = 0; r < rNum; r++) {
     for (let c = 0; c < cNum; c++) {
+      let x = margin + c * ((width - 2 * margin) / cNum + spacing);
+      let y = margin + r * ((height - 2 * margin) / rNum + spacing);
+      let centerX = x + (width - 2 * margin) / (2 * cNum);
+      let centerY = y + (height - 2 * margin) / (2 * rNum);
+
       push();
-      translate(translate(width / 2, height / 2));
-      rotate(this.vel.heading());
+      translate(centerX, centerY);
+      rotate(radians(angleBegin));
+      noFill();
+      stroke(0);
+      strokeWeight(2);
+      ellipse(0, 0, (width - 2 * margin) / cNum, (height - 2 * margin) / rNum);
       pop();
     }
   }
 
-  fill(127);
-  stroke(0);
-  strokeWeight(2);
-  line(0, 0, x, y);
-  circle(x, y, 48);
-
-  angleBegin += angleBeginVel;
+  angleBegin += radians(angleStep);
 }
