@@ -1,7 +1,7 @@
 const cNum = 8;
 const rNum = 8;
 const margin = 20;
-const spacing = 20; // 각 그래픽 간의 간격
+const spacing = 20;
 let angleBegin = 0;
 let angleStep = 15;
 
