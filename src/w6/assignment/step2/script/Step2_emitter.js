@@ -2,7 +2,7 @@ class Emitter {
   constructor(emittingPosX, emittingPosY) {
     this.emittingPos = createVector(emittingPosX, emittingPosY);
     this.balls = [];
-    this.ballNum = 1; // Set the number of balls to 100
+    this.ballNum = 1;
     this.hasCreatedBall = false;
   }
 
@@ -11,7 +11,6 @@ class Emitter {
       return;
     }
     for (let i = 0; i < this.ballNum; i++) {
-      // Loop through 100 times to create 100 balls
       const angle = random(TAU);
       const p = new Ball(
         this.emittingPos.x,
@@ -19,7 +18,7 @@ class Emitter {
         angle,
         random(19, 20),
         10,
-        random(120, 300)
+        random(120, 280)
       );
       this.balls.push(p);
     }

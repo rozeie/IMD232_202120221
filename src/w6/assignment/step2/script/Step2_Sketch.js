@@ -7,7 +7,6 @@ function setup() {
   g = createVector(0, 0.1);
 
   background('white');
-  // emitters.push(new Emitter(width / 2, height / 2)); // Create an initial emitter
 }
 
 function draw() {

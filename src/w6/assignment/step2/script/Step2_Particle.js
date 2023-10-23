@@ -27,7 +27,7 @@ class Ball {
   display() {
     colorMode(HSB, 100);
     noStroke();
-    fill(this.Hue / random(2, 40), 100, 100, this.lifespan * 2);
+    fill(this.Hue / 5, 100, 100, this.lifespan * 2);
     ellipse(this.pos.x, this.pos.y, this.rad * 2);
   }
 
