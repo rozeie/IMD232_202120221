@@ -2,7 +2,9 @@ const {
   Engine,
   Render,
   Runner,
+  Body,
   Composites,
+  Constraint,
   Common,
   MouseConstraint,
   Mouse,
@@ -17,29 +19,31 @@ const engine = Engine.create(),
   world = engine.world;
 
 const runner = Runner.create();
+Runner.run(runner, engine);
 
 const oWidth = 800;
 const oHeight = 600;
 
 let mouse;
 
-const walls = [];
 let stack;
 
-Runner.run(runner, engine);
+let group;
+let ropeA;
+let ropeB;
+let ropeC;
 
 function setup() {
   setCanvasContainer('canvas', oWidth, oHeight, true);
 
-  engine = Matter.Engine.create();
-  world = engine.world;
+  group = Matter.Body.nextGroup(true);
+  let Concave = Vertices.fromPath('20 0 20 10 50 10 50 40 20 40 20 50 0 25'),
+    Chevron = Vertices.fromPath('50 0 37.5 25 50 50 12.5 50 0 25 12.5 0'),
+    Star = Vertices.fromPath(
+      '35 7 19 17 14 38 14 58 25 79 45 85 65 84 65 66 46 67 34 59 30 44 33 29 45 23 66 23 66 7 53 7'
+    );
 
-  let group = Matter.Body.nextGroup(true);
-  Concave = Vertices.fromPath(
-    '-0.6 -0.2 1.0 -0.2 1 0.4 0.7 1.1 -0.2 1.0 -0.2 0.4 -1.3 0.2 -0.6 -0.2'
-  );
-
-  ropeA = Matter.Composites.stack(100, 50, 10, 1, 10, 10, function (x, y) {
+  ropeA = Matter.Composites.stack(100, 50, 8, 1, 10, 10, function (x, y) {
     return Matter.Bodies.fromVertices(x, y, Concave, {
       collisionFilter: { group: group },
     });
@@ -63,8 +67,8 @@ function setup() {
 
   group = Matter.Body.nextGroup(true);
 
-  ropeB = Matter.Composites.stack(350, 50, 10, 1, 10, 10, function (x, y) {
-    return Matter.Bodies.circle(x, y, 20, {
+  ropeB = Matter.Composites.stack(350, 50, 8, 1, 10, 10, function (x, y) {
+    return Matter.Bodies.fromVertices(x, y, Chevron, {
       collisionFilter: { group: group },
     });
   });
@@ -87,14 +91,17 @@ function setup() {
 
   group = Matter.Body.nextGroup(true);
 
-  ropeC = Matter.Composites.stack(600, 50, 13, 1, 10, 10, function (x, y) {
-    return Matter.Bodies.rectangle(x - 20, y, 50, 20, {
+  ropeC = Matter.Composites.stack(600, 50, 10, 1, 10, 10, function (x, y) {
+    return Matter.Bodies.fromVertices(x, y, Star, {
       collisionFilter: { group: group },
       chamfer: 5,
     });
   });
 
-  Matter.Composites.chain(ropeC, 0.3, 0, -0.3, 0, { stiffness: 1, length: 0 });
+  Matter.Composites.chain(ropeC, 0.3, 0, -0.3, 0, {
+    stiffness: 1,
+    length: 0,
+  });
 
   Matter.Composite.add(
     ropeC,
@@ -113,22 +120,62 @@ function setup() {
     Matter.Bodies.rectangle(400, 600, 1200, 50.5, { isStatic: true }),
   ]);
 
-  let canvasMouse = Matter.Mouse.create(canvas.elt),
-    mouseOptions = {
-      mouse: canvasMouse,
-    };
+  mouse = Mouse.create(canvas.elt);
+  mouse.pixelRatio = (pixelDensity() * width) / oWidth;
+  let mouseConstraint = MouseConstraint.create(engine, {
+    mouse: mouse,
+    constraint: {
+      stiffness: 0.2,
+    },
+  });
+  Composite.add(world, mouseConstraint);
 
-  mouseConstraint = Matter.MouseConstraint.create(engine, mouseOptions);
-  Matter.World.add(world, mouseConstraint);
-
-  Matter.Render.mouse = canvasMouse;
+  console.log('group', group);
+  console.log('ropeA', ropeA);
+  console.log('ropeB', ropeB);
+  console.log('ropeC', ropeC);
+  console.log('Bodies', Bodies);
 }
 
 function draw() {
+  mouse.pixelRatio = (pixelDensity() * width) / oWidth;
+
   noStroke();
+
   background('white');
-  fill('red');
+
+  fill('#E68779');
   ropeA.bodies.forEach((eachBody) => {
+    eachBody.parts.forEach((eachPart, idx) => {
+      if (idx === 0) return;
+      beginShape();
+      eachPart.vertices.forEach((eachVertex) => {
+        vertex(
+          (eachVertex.x / oWidth) * width,
+          (eachVertex.y / oHeight) * height
+        );
+      });
+      endShape(CLOSE);
+    });
+  });
+
+  fill('#7293E5');
+  ropeB.bodies.forEach((eachBody) => {
+    eachBody.parts.forEach((eachPart, idx) => {
+      if (idx === 0) return;
+      beginShape();
+      eachPart.vertices.forEach((eachVertex) => {
+        vertex(
+          (eachVertex.x / oWidth) * width,
+          (eachVertex.y / oHeight) * height
+        );
+      });
+      endShape(CLOSE);
+    });
+  });
+
+  fill('#9AB993');
+  ropeC.bodies.forEach((eachBody) => {
     eachBody.parts.forEach((eachPart, idx) => {
       if (idx === 0) return;
       beginShape();
