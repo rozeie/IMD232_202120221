@@ -1,26 +1,31 @@
+// 변수 선언
 const {
   Engine,
   Render,
   Runner,
   Body,
+  Bodies,
+  Composite,
   Composites,
   Constraint,
   Common,
   MouseConstraint,
   Mouse,
-  Composite,
   Vertices,
-  Bodies,
 } = Matter;
 
+// decomp 사용
 Common.setDecomp(decomp);
 
+// engine
 const engine = Engine.create(),
   world = engine.world;
 
+// runner
 const runner = Runner.create();
 Runner.run(runner, engine);
 
+// origninal canvas
 const oWidth = 800;
 const oHeight = 600;
 
