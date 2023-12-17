@@ -22,13 +22,13 @@ function draw() {
   background(20); // 배경색 밝기 30
 
   // 첫 번째 도형 세트
-  drawShapeSet(0, 0, 0, 5, random(10));
+  drawShapeSet(500, 0, 0, 5, random(15));
 
   // 두 번째 도형 세트
-  drawShapeSet(100, 150, 50, 8, random(10));
+  drawShapeSet(100, 150, 50, 8, random(7));
 
   // 세 번째 도형 세트
-  drawShapeSet(-150, 100, 50, 3, random(10));
+  drawShapeSet(-150, 100, 50, 3, random(2));
 }
 
 // 도형 세트 그리기 함수
